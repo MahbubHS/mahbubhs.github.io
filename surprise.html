@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Surprise · Countdown</title>
+  <!-- Google Fonts: modern professional pairing -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #0a0c14;
+      --surface-glass: rgba(18, 22, 35, 0.75);
+      --border-light: rgba(255, 255, 255, 0.12);
+      --text-primary: #f0f2fa;
+      --text-secondary: #b4bbd9;
+      --accent-soft: #c4b5fd;
+      --accent-warm: #f5b0cb;
+      --glow-purple: rgba(148, 130, 240, 0.25);
+      --shadow-heavy: 0 30px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 30% 20%, #1b1f33 0%, #0b0e17 85%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* elegant ambient light shapes */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 30%, rgba(120, 100, 200, 0.12) 0%, transparent 55%),
+                  radial-gradient(ellipse at 25% 70%, rgba(250, 140, 160, 0.08) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+      animation: ambientPulse 12s infinite alternate ease-in-out;
+    }
+
+    @keyframes ambientPulse {
+      0% { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* main card – glass morphism professional look */
+    .countdown-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 700px;
+      background: rgba(15, 18, 30, 0.7);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 3.5rem;
+      padding: 3.2rem 2.8rem;
+      box-shadow: 0 40px 70px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    /* subtle top accent line */
+    .accent-strip {
+      width: 70px;
+      height: 4px;
+      background: linear-gradient(90deg, #bca0ff, #f7a1c4);
+      border-radius: 10px;
+      margin: 0 auto 2rem;
+      opacity: 0.9;
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem 1.6rem;
+      border-radius: 3rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      color: #cdd4f0;
+      margin-bottom: 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', 'Outfit', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 500;
+      letter-spacing: -0.7px;
+      background: linear-gradient(to right, #ede9ff, #d4c5fe, #fcd5e4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: #b1bbdf;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+      padding-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .subtitle i {
+      font-style: normal;
+      font-size: 1.2rem;
+    }
+
+    /* timer grid with refined typography */
+    .timer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      margin: 1.2rem 0 2.2rem;
+    }
+
+    .time-unit {
+      background: rgba(8, 10, 20, 0.65);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 2.2rem;
+      padding: 1.3rem 0.5rem;
+      min-width: 85px;
+      flex: 1 1 80px;
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.25s ease, box-shadow 0.3s;
+    }
+
+    .time-unit:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 28px 38px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .digit {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 3.6rem;
+      font-weight: 600;
+      background: linear-gradient(180deg, #ffffff 5%, #dbd2fc 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 14px rgba(170, 140, 255, 0.5);
+    }
+
+    .unit-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: #989ec9;
+      margin-top: 0.4rem;
+    }
+
+    .separator {
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: #6b719e;
+      margin: 0 -0.2rem;
+      align-self: center;
+      opacity: 0.7;
+    }
+
+    /* progress section */
+    .progress-container {
+      margin: 1.5rem 0 1.8rem;
+    }
+
+    .progress-track {
+      width: 100%;
+      max-width: 280px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      margin: 0 auto;
+      overflow: hidden;
+      box-shadow: inset 0 1px 5px rgba(0,0,0,0.5);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #b491f0, #f599bb);
+      border-radius: 20px;
+      box-shadow: 0 0 18px #b77ef0;
+      transition: width 0.4s ease;
+    }
+
+    .target-highlight {
+      font-weight: 500;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+      padding: 0.5rem 2rem;
+      border-radius: 2.8rem;
+      display: inline-block;
+      color: #dce1fc;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .redirect-message {
+      margin-top: 2.2rem;
+      font-size: 0.9rem;
+      color: #b1bce2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 500px) {
+      .countdown-card {
+        padding: 2.4rem 1.5rem;
+        border-radius: 2.8rem;
+      }
+      .digit {
+        font-size: 2.7rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="countdown-card">
+    <div class="accent-strip"></div>
+    
+    <div class="event-badge">
+      <span>🌸</span> Exclusive moment <span>✨</span>
+    </div>
+
+<!--     <h1>midnight · june first</h1> -->
+    
+    <div class="subtitle">
+      <i>🌿</i> The surprise unlocks at exactly 12:00 AM <i>🌙</i>
+    </div>
+
+    <!-- dynamic countdown display -->
+    <div class="timer-grid" id="timerGrid">
+      <div class="time-unit">
+        <div class="digit" id="daysDisplay">00</div>
+        <div class="unit-label">days</div>
+      </div>
+      <div class="separator">:</div>
+      <div class="time-unit">
+        <div class="digit" id="hoursDisplay">00</div>
+        <div class="unit-label">hours</div>
+      </div>
+      <div class="separator">:</div>
+      <div class="time-unit">
+        <div class="digit" id="minutesDisplay">00</div>
+        <div class="unit-label">mins</div>
+      </div>
+      <div class="separator">:</div>
+      <div class="time-unit">
+        <div class="digit" id="secondsDisplay">00</div>
+        <div class="unit-label">secs</div>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFillBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="target-highlight">
+      unlocking...
+    </div>
+
+    <div class="redirect-message">
+      <span>🎈</span> automatically redirects to your surprise <span>🎈</span>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // ----- TARGET: JUNE 1, CURRENT YEAR, 00:00:00.000 LOCAL TIME -----
+      function getTargetJuneFirst() {
+        const now = new Date();
+        const year = now.getFullYear();
+        // month index 5 = June, day 1, hour 0, minute 0, second 0, ms 0
+        return new Date(year, 4, 31, 16, 40, 0, 0);
+      }
+
+      // DOM elements
+      const daysEl = document.getElementById('daysDisplay');
+      const hoursEl = document.getElementById('hoursDisplay');
+      const minutesEl = document.getElementById('minutesDisplay');
+      const secondsEl = document.getElementById('secondsDisplay');
+      const progressFill = document.getElementById('progressFillBar');
+
+      let redirectTriggered = false;
+
+      // formatting helper
+      const formatUnit = (value) => String(Math.floor(value)).padStart(2, '0');
+
+      // main update function
+      function refreshCountdown() {
+        if (redirectTriggered) return;
+
+        const now = new Date();
+        const target = getTargetJuneFirst();
+
+        // if current time reached or passed target -> redirect
+        if (now >= target) {
+          performRedirect();
+          return;
+        }
+
+        const diffMs = target - now;
+        if (diffMs <= 0) {
+          performRedirect();
+          return;
+        }
+
+        // calculate time components
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        // update UI
+        daysEl.textContent = formatUnit(days);
+        hoursEl.textContent = formatUnit(hours);
+        minutesEl.textContent = formatUnit(minutes);
+        secondsEl.textContent = formatUnit(seconds);
+
+        // ---- progress bar logic (meaningful UX) ----
+        // Represent how much of the remaining time has passed today relative to midnight,
+        // or if target is today, show percentage of day completed toward target.
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        
+        let progressPercent = 0;
+        
+        if (target <= endOfToday) {
+          // target is today: calculate elapsed from start of today to now vs total to target
+          const totalWindow = target - startOfToday;
+          const elapsedWindow = now - startOfToday;
+          progressPercent = totalWindow > 0 ? Math.min(100, (elapsedWindow / totalWindow) * 100) : 100;
+        } else {
+          // target is future days: show percentage of current day completed (gives sense of movement)
+          const msInDay = 24 * 60 * 60 * 1000;
+          const dayProgress = now - startOfToday;
+          progressPercent = Math.min(100, (dayProgress / msInDay) * 100);
+        }
+        
+        progressFill.style.width = `${progressPercent}%`;
+      }
+
+      function performRedirect() {
+        if (redirectTriggered) return;
+        redirectTriggered = true;
+        // redirect to birthday-card.html (must exist in same directory)
+        window.location.href = 'birthday-card.html';
+      }
+
+      // initial call
+      refreshCountdown();
+
+      // update every second
+      const mainInterval = setInterval(() => {
+        if (redirectTriggered) {
+          clearInterval(mainInterval);
+          return;
+        }
+        // double-check before update
+        const now = new Date();
+        if (now >= getTargetJuneFirst()) {
+          performRedirect();
+          clearInterval(mainInterval);
+          return;
+        }
+        refreshCountdown();
+      }, 1000);
+
+      // visibility change: when user returns to tab, immediate sync
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden === false && !redirectTriggered) {
+          const now = new Date();
+          if (now >= getTargetJuneFirst()) {
+            performRedirect();
+          } else {
+            refreshCountdown();
+          }
+        }
+      });
+
+      // additional safety check every 20 seconds (in case timer drifts)
+      const safetyInterval = setInterval(() => {
+        if (redirectTriggered) {
+          clearInterval(safetyInterval);
+          return;
+        }
+        if (new Date() >= getTargetJuneFirst()) {
+          performRedirect();
+        }
+      }, 20000);
+    })();
+  </script>
+</body>
+</html>
