@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px;
+    font-family: 'Cormorant Garamond', serif;
+    background: linear-gradient(145deg, #5C1033 0%, #8B2252 25%, #B8456E 55%, #D4849E 80%, #E8B4C0 100%);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient glow blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    pointer-events: none;
+    animation: blobFloat ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; background: rgba(255,120,160,0.25); animation-duration: 7s; }
+  .blob-2 { width: 300px; height: 300px; bottom: -80px; right: -80px; background: rgba(255,200,130,0.2); animation-duration: 9s; }
+  .blob-3 { width: 250px; height: 250px; top: 40%; left: 60%; background: rgba(200,60,100,0.2); animation-duration: 5s; }
+
+  @keyframes blobFloat {
+    from { transform: scale(1) translate(0, 0); }
+    to   { transform: scale(1.15) translate(20px, 20px); }
+  }
+
+  /* Falling petals */
+  .petal {
+    position: fixed;
+    top: -40px;
+    pointer-events: none;
+    z-index: 1;
+    animation: petalFall linear infinite;
+    opacity: 0;
+  }
+  .petal-inner {
+    width: 11px;
+    height: 17px;
+    border-radius: 0 70% 70% 70%;
+    transform: rotate(45deg);
+  }
+  @keyframes petalFall {
+    0%   { transform: translateY(-40px) translateX(0)     rotate(0deg);   opacity: 0; }
+    8%   { opacity: 0.75; }
+    92%  { opacity: 0.5; }
+    100% { transform: translateY(110vh) translateX(60px)  rotate(400deg); opacity: 0; }
+  }
+
+  /* Sparkle stars */
+  .star {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    font-size: 13px;
+    animation: starPulse ease-in-out infinite;
+  }
+  @keyframes starPulse {
+    0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+    50%       { opacity: 1; transform: scale(1)   rotate(20deg); }
+  }
+
+  /* ── CARD ── */
+  .card-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    background: linear-gradient(160deg, #FFFDF7 0%, #FFF4EA 60%, #FFF0E6 100%);
+    width: min(540px, 100%);
+    padding: 52px 44px 48px;
+    position: relative;
+    box-shadow:
+      0 40px 100px rgba(80, 10, 40, 0.55),
+      0 10px 30px rgba(80, 10, 40, 0.3),
+      inset 0 0 80px rgba(201, 168, 76, 0.04);
+    animation: cardReveal 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+  }
+
+  @keyframes cardReveal {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Gold inner border frame */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid;
+    border-color: #C9A84C;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  /* Corner SVG flourishes */
+  .corner {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    pointer-events: none;
+  }
+  .corner svg { width: 100%; height: 100%; }
+  .c-tl { top: 5px;  left: 5px; }
+  .c-tr { top: 5px;  right: 5px;  transform: scaleX(-1); }
+  .c-bl { bottom: 5px; left: 5px;  transform: scaleY(-1); }
+  .c-br { bottom: 5px; right: 5px; transform: scale(-1); }
+
+  /* ── TYPOGRAPHY ── */
+  .pre-label {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #B08830;
+    opacity: 0.85;
+    animation: riseIn 0.9s ease 1s both;
+    margin-bottom: 6px;
+  }
+
+  .title {
+    text-align: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(3rem, 9vw, 4.6rem);
+    line-height: 1.05;
+    background: linear-gradient(100deg, #7A5212 0%, #C9A84C 30%, #F4D03F 52%, #C9A84C 72%, #7A5212 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3.5s linear infinite, riseIn 1s ease 0.6s both;
+    margin-bottom: 2px;
+  }
+  @keyframes shimmer {
+    from { background-position: 0% center; }
+    to   { background-position: 220% center; }
+  }
+
+  .flowers-top {
+    text-align: center;
+    font-size: 1.35rem;
+    letter-spacing: 0.25em;
+    animation: riseIn 0.9s ease 0.4s both;
+    margin-bottom: 14px;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0;
+    animation: riseIn 0.9s ease 1.2s both;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.7), transparent);
+  }
+  .divider-diamond { color: #C9A84C; font-size: 0.6rem; }
+
+  .intro {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.08rem;
+    color: #3B1520;
+    line-height: 1.95;
+    animation: riseIn 0.9s ease 1.4s both;
+    margin-bottom: 4px;
+  }
+  .intro strong {
+    font-style: normal;
+    font-weight: 600;
+    color: #8B2252;
+  }
+
+  .quote-block {
+    border-left: 2.5px solid #C9A84C;
+    padding: 14px 18px;
+    margin: 20px 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), rgba(212,100,140,0.05));
+    animation: riseIn 0.9s ease 1.6s both;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: #3B1520;
+    line-height: 2;
+  }
+  .quote-text em { color: #8B2252; font-style: italic; }
+
+  .closing-msg {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.98rem;
+    color: #3B1520;
+    line-height: 1.85;
+    animation: riseIn 0.9s ease 1.8s both;
+    margin: 20px 0 12px;
+  }
+  .closing-msg span { color: #8B2252; font-weight: 600; }
+
+  .emoji-row {
+    text-align: center;
+    font-size: 1.6rem;
+    letter-spacing: 0.3em;
+    animation: riseIn 0.9s ease 2s both;
+    margin-bottom: 20px;
+  }
+
+  .signature {
+    text-align: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5rem;
+    color: #C9A84C;
+    animation: riseIn 0.9s ease 2.1s both;
+  }
+
+  .flowers-bottom {
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    animation: riseIn 0.9s ease 2.2s both;
+    margin-top: 14px;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #name {
+    text-align: center;
+    margin-top: 2px;
+    color: #8B2252;
+    font-family: cursive;
+    animation: shimmer 3.5s linear infinite, riseIn 1s ease 0.6s both;
+    
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Falling petals -->
+<div id="petals-layer"></div>
+
+<!-- Sparkle stars -->
+<div id="stars-layer"></div>
+
+<div class="card-wrapper">
+  <div class="card">
+
+    <!-- Corner flourishes -->
+    <div class="corner c-tl"><svg viewBox="0 0 56 56" fill="none">
+      <path d="M4 52 C4 28 28 4 52 4" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <path d="M4 36 C4 18 18 4 36 4" stroke="#C9A84C" stroke-width="0.7" opacity="0.4"/>
+      <circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity="0.8"/>
+      <path d="M4 4 Q12 0 14 8 Q6 12 4 4Z" fill="#C9A84C" opacity="0.65"/>
+      <circle cx="52" cy="4" r="1.5" fill="#C9A84C" opacity="0.45"/>
+      <circle cx="4" cy="52" r="1.5" fill="#C9A84C" opacity="0.45"/>
+    </svg></div>
+
+    <div class="corner c-tr"><svg viewBox="0 0 56 56" fill="none">
+      <path d="M4 52 C4 28 28 4 52 4" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <path d="M4 36 C4 18 18 4 36 4" stroke="#C9A84C" stroke-width="0.7" opacity="0.4"/>
+      <circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity="0.8"/>
+      <path d="M4 4 Q12 0 14 8 Q6 12 4 4Z" fill="#C9A84C" opacity="0.65"/>
+      <circle cx="52" cy="4" r="1.5" fill="#C9A84C" opacity="0.45"/>
+      <circle cx="4" cy="52" r="1.5" fill="#C9A84C" opacity="0.45"/>
+    </svg></div>
+
+    <div class="corner c-bl"><svg viewBox="0 0 56 56" fill="none">
+      <path d="M4 52 C4 28 28 4 52 4" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <path d="M4 36 C4 18 18 4 36 4" stroke="#C9A84C" stroke-width="0.7" opacity="0.4"/>
+      <circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity="0.8"/>
+      <path d="M4 4 Q12 0 14 8 Q6 12 4 4Z" fill="#C9A84C" opacity="0.65"/>
+      <circle cx="52" cy="4" r="1.5" fill="#C9A84C" opacity="0.45"/>
+      <circle cx="4" cy="52" r="1.5" fill="#C9A84C" opacity="0.45"/>
+    </svg></div>
+
+    <div class="corner c-br"><svg viewBox="0 0 56 56" fill="none">
+      <path d="M4 52 C4 28 28 4 52 4" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <path d="M4 36 C4 18 18 4 36 4" stroke="#C9A84C" stroke-width="0.7" opacity="0.4"/>
+      <circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity="0.8"/>
+      <path d="M4 4 Q12 0 14 8 Q6 12 4 4Z" fill="#C9A84C" opacity="0.65"/>
+      <circle cx="52" cy="4" r="1.5" fill="#C9A84C" opacity="0.45"/>
+      <circle cx="4" cy="52" r="1.5" fill="#C9A84C" opacity="0.45"/>
+    </svg></div>
+
+    <!-- Card Content -->
+    <div class="flowers-top">🌸 &nbsp; 🌷 &nbsp; 🌸</div>
+
+    <p class="pre-label">✦ &nbsp; a birthday wish &nbsp; ✦</p>
+
+    <h1 class="title">Happy Birthday</h1>
+    <p id="name">MAISA</p>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-diamond">◆</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="intro">
+      Every birthday is a reminder that you are a<br>
+      <strong>rare gift</strong> to this world —<br>
+      cherished, celebrated, and deeply loved.
+    </p>
+
+    <div class="divider" style="margin: 16px 0;">
+      <div class="divider-line"></div>
+      <span class="divider-diamond" style="font-size:0.5rem;">◆</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">
+        Here's to <em>new beginnings</em>, new adventures,
+        and endless reasons to smile.<br><br>
+        Another year, another chance to <em>dream bigger</em>,
+        love deeper, and <em>shine brighter</em>.
+      </p>
+    </div>
+
+    <p class="closing-msg">
+      I hope your birthday is as <span>sweet</span> as you are —<br>
+      have a <span>wonderful</span> and <span>enjoyable</span> birthday!
+    </p>
+
+    <div class="emoji-row">🎂 &nbsp; 🎉 &nbsp; 🥳</div>
+
+    <div class="divider" style="margin-bottom: 16px;">
+      <div class="divider-line"></div>
+      <span class="divider-diamond">◆</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="signature">With Warmth &amp; Wishes by Saad</p>
+
+    <div class="flowers-bottom">🌹 &nbsp; 🌸 &nbsp; 🌹</div>
+  </div>
+</div>
+
+<script>
+  /* ── Falling petals ── */
+  const petalColors = [
+    ['rgba(255,182,200,0.88)', 'rgba(255,110,140,0.7)'],
+    ['rgba(255,210,220,0.85)', 'rgba(240,140,160,0.65)'],
+    ['rgba(250,160,185,0.88)', 'rgba(210,80,115,0.7)'],
+    ['rgba(255,230,235,0.8)',  'rgba(220,120,150,0.6)'],
+  ];
+  const layer = document.getElementById('petals-layer');
+  for (let i = 0; i < 22; i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'petal';
+    wrap.style.left = (Math.random() * 100) + 'vw';
+    const dur = 7 + Math.random() * 9;
+    wrap.style.animationDuration  = dur + 's';
+    wrap.style.animationDelay     = (Math.random() * dur) + 's';
+    const scale = 0.7 + Math.random() * 0.9;
+    wrap.style.transform = `scale(${scale})`;
+
+    const inner = document.createElement('div');
+    inner.className = 'petal-inner';
+    const c = petalColors[Math.floor(Math.random() * petalColors.length)];
+    inner.style.background = `linear-gradient(135deg, ${c[0]}, ${c[1]})`;
+    inner.style.boxShadow   = `inset 0 0 4px rgba(255,255,255,0.3)`;
+
+    wrap.appendChild(inner);
+    layer.appendChild(wrap);
+  }
+
+  /* ── Sparkle stars ── */
+  const starChars  = ['✦', '✧', '✴', '✨', '⋆'];
+  const starColors = ['#F4D03F', '#FFE87C', '#FFD700', '#FFC0CB', '#FFDDE1'];
+  const sLayer = document.getElementById('stars-layer');
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+    s.style.left  = (Math.random() * 100) + 'vw';
+    s.style.top   = (Math.random() * 100) + 'vh';
+    s.style.fontSize = (9 + Math.random() * 13) + 'px';
+    s.style.color = starColors[Math.floor(Math.random() * starColors.length)];
+    const dur = 2.5 + Math.random() * 4;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay    = (Math.random() * dur) + 's';
+    sLayer.appendChild(s);
+  }
+</script>
+</body>
+</html>
